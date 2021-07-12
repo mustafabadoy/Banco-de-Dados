@@ -1,0 +1,84 @@
+Instalando o PostgreSQL 10 no Red Hat 8 / CentOS 8
+
+3 - Instalar o PostgreSQL:
+
+    # yum install postgresql-server 
+
+4 - Verificando pacotes instalados:
+
+    # rpm -qa | grep postgres
+
+5 - Criando um novo cluster de banco de dados PostgreSQL:
+
+    # postgresql-setup --initdb
+
+7 - Iniciando o serviço no boot:
+
+    # systemctl enable postgresql.service 
+
+6 - Subindo o serviço:
+
+    # systemctl start postgresql.service
+
+8 - Verificando o status do serviço:
+
+    # systemctl status postgresql.service
+
+9 - Reiniciando o serviço:
+
+    # systemctl restart postgresql.service
+
+
+10 - Setar senha no usuário postgres:
+
+    # sudo -u postgres psql
+
+    postgres=# alter user postgres with encrypted password 'teste';
+
+11 - Sair do prompt do psql:
+
+    postgres=# \q
+
+
+12 - Alterar
+
+     # vi /var/lib/pgsql/9.3/data/postgresql.conf
+
+#listen_addresses = ‘localhost’ # what IP address(es) to listen on
+
+     para
+
+listen_addresses = ‘*‘ # what IP address(es) to listen on
+
+
+habilitar a encriptação de passwords, para fazer isso descomente a linha abaixo removendo o "#", ficando a linha assim:
+
+password_encryption = on 
+
+
+13 - Alterar    
+
+    # vi /var/lib/pgsql/9.3/data/pg_hba.conf
+
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            ident
+# IPv6 local connections:
+host    all             all             ::1/128                 ident
+
+     para 
+
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            md5
+host    all             all             192.168.0.0/24          md5
+# IPv6 local connections:
+host    all             all             ::1/128                 md5
+
+
+
+14 - Testando
+
+    # psql -h localhost -U postgres -d postgres
+
+    Senha para usuário postgres: (senha do usuario postgres)
+
+    postgres=#    

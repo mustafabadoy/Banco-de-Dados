@@ -1,0 +1,83 @@
+Instalando o PostgreSQL no Red Hat/CentOS
+
+1 - Baixa o arquivo rpm do Repositorio na pagina: http://yum.postgresql.org/repopackages.php
+
+2 - Instalar o arquivo:
+
+    # rpm -ivh pgdg-redhat93-9.3-1.noarch
+
+3 - Instalar o PostgreSQL:
+
+    # yum install postgresql93-server postgresql93-contrib
+
+4 - Verificando pacotes instalados:
+
+    # rpm -qa | grep postgres
+
+5 - Criando um novo cluster de banco de dados PostgreSQL:
+
+    # service postgresql-9.3 initdb
+
+6 - Subindo o Serviço:
+
+    # chkconfig postgresql-9.3 on
+
+    # service postgresql-9.3 start
+
+7 - Verificando status do serviço:
+
+    # service postgresql-9.3 status
+
+8 - Setar senha no usuário postgres:
+
+    # sudo -u postgres psql
+
+    postgres=# alter user postgres with encrypted password 'teste';
+
+9 - Sair do prompt do psql:
+
+    postgres=# \q
+
+
+10 - Alterar
+
+     # vi /var/lib/pgsql/9.3/data/postgresql.conf
+
+#listen_addresses = ‘localhost’ # what IP address(es) to listen on
+
+     para
+
+listen_addresses = ‘*‘ # what IP address(es) to listen on
+
+
+habilitar a encriptação de passwords, para fazer isso descomente a linha abaixo removendo o "#", ficando a linha assim:
+
+password_encryption = on 
+
+
+11 - Alterar    
+
+    # vi /var/lib/pgsql/9.3/data/pg_hba.conf
+
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            ident
+# IPv6 local connections:
+host    all             all             ::1/128                 ident
+
+     para 
+
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            md5
+host    all             all             192.168.0.0/24          md5
+# IPv6 local connections:
+host    all             all             ::1/128                 md5
+
+
+
+12 - Testando
+
+    # psql -h localhost -U postgres -d postgres
+
+    Senha para usuário postgres: (senha do usuario postgres)
+
+    postgres=#    

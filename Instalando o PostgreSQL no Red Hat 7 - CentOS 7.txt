@@ -1,0 +1,90 @@
+Instalando o PostgreSQL no Red Hat 7 / CentOS 7
+
+1 - Baixa o arquivo rpm do Repositorio na pagina: http://yum.postgresql.org/repopackages.php
+
+2 - Instalar o arquivo:
+
+    # rpm -ivh pgdg-redhat94-9.4-3.noarch
+
+3 - Instalar o PostgreSQL:
+
+    # yum install postgresql94-server postgresql94-contrib
+
+4 - Verificando pacotes instalados:
+
+    # rpm -qa | grep postgres
+
+5 - Criando um novo cluster de banco de dados PostgreSQL:
+
+    # /usr/pgsql-9.4/bin/postgresql94-setup initdb
+
+6 - Subindo o serviço:
+
+    # systemctl start postgresql-9.4.service
+
+7 - Iniciando o serviço no boot:
+
+    # systemctl enable postgresql-9.4.service 
+
+8 - Verificando o status do serviço:
+
+    # systemctl status postgresql-9.4.service
+
+9 - Reiniciando o serviço:
+
+    # systemctl restart postgresql-9.4.service 
+
+
+10 - Setar senha no usuário postgres:
+
+    # sudo -u postgres psql
+
+    postgres=# alter user postgres with encrypted password 'teste';
+
+11 - Sair do prompt do psql:
+
+    postgres=# \q
+
+
+12 - Alterar
+
+     # vi /var/lib/pgsql/9.3/data/postgresql.conf
+
+#listen_addresses = ‘localhost’ # what IP address(es) to listen on
+
+     para
+
+listen_addresses = ‘*‘ # what IP address(es) to listen on
+
+
+habilitar a encriptação de passwords, para fazer isso descomente a linha abaixo removendo o "#", ficando a linha assim:
+
+password_encryption = on 
+
+
+13 - Alterar    
+
+    # vi /var/lib/pgsql/9.3/data/pg_hba.conf
+
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            ident
+# IPv6 local connections:
+host    all             all             ::1/128                 ident
+
+     para 
+
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            md5
+host    all             all             192.168.0.0/24          md5
+# IPv6 local connections:
+host    all             all             ::1/128                 md5
+
+
+
+14 - Testando
+
+    # psql -h localhost -U postgres -d postgres
+
+    Senha para usuário postgres: (senha do usuario postgres)
+
+    postgres=#    
